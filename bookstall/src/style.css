@@ -1,0 +1,413 @@
+/* ===============================
+   UNKAI BOOK HOME PAGE STYLES
+   (Header / Search / Categories / Carousels / Banner / etc.)
+=================================*/
+
+/* Header / Top Bar Area */
+header, .top-bar, .header-area {
+  background: linear-gradient(to bottom, #fdfbfb, #f9f5ff);
+  padding: 20px 0 10px;
+  border-bottom: 1px solid rgba(168, 85, 247, 0.08);
+}
+
+.logo-area {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: #6b4e9b;
+  letter-spacing: -0.5px;
+}
+
+/* Search Bar */
+.search-container {
+  position: relative;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.search-input {
+  width: 100%;
+  padding: 14px 20px 14px 50px;
+  border: 1px solid #e0d4f5;
+  border-radius: 50px;
+  font-size: 15px;
+  background: white;
+  box-shadow: 0 4px 15px rgba(168, 85, 247, 0.08);
+  transition: all 0.25s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #F18966;
+  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.15);
+}
+
+.search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #FAD7A0;
+  font-size: 18px;
+}
+
+/* Gradient Search Button (next to input in screenshot) */
+.search-btn {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  bottom: 6px;
+  width: 80px;
+  border: none;
+  border-radius: 40px;
+  background: linear-gradient(90deg, #F18966, #A0522D);
+  color: white;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.search-btn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 8px 25px rgba(168, 85, 247, 0.3);
+}
+
+/* Category Pills / Tabs */
+.category-pills {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 30px 0 50px;
+  padding: 0 10px;
+}
+
+.category-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: white;
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+  font-size: 14px;
+  color: #A0522D;
+  cursor: pointer;
+  transition: all 0.25s;
+  white-space: nowrap;
+}
+
+.category-pill.active,
+.category-pill:hover {
+  background: #fff2e6;
+  color: #65350F;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(168, 85, 247, 0.12);
+}
+
+.category-pill img,
+.category-pill svg {
+  width: 20px;
+  height: 20px;
+  opacity: 0.9;
+}
+
+/* Popular / Latest Sections + Horizontal Scroll Carousel */
+.carousel-section {
+  margin: 60px 0;
+}
+
+.carousel-section h2 {
+  font-size: 26px;
+  margin-bottom: 25px;
+  text-align: center;
+  color: #65350F;
+}
+
+.carousel-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 10px 0 30px;
+  scrollbar-width: thin;
+  scrollbar-color: #FAD7A0 transparent;
+}
+
+.carousel-track::-webkit-scrollbar {
+  height: 8px;
+}
+
+.carousel-track::-webkit-scrollbar-thumb {
+  background: #FAD7A0;
+  border-radius: 10px;
+}
+
+.book-item {
+  flex: 0 0 160px;          /* adjust width for more/less visible items */
+  text-align: center;
+}
+
+.book-item img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  transition: all 0.35s ease;
+  background: #fff4eb;
+}
+
+.book-item:hover img {
+  transform: scale(1.06) translateY(-8px);
+  box-shadow: 0 20px 45px rgba(168, 85, 247, 0.22);
+}
+
+.book-item h4 {
+  margin: 12px 0 4px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #4e3723;
+}
+
+.book-item .author {
+  font-size: 13px;
+  color: #7b5e57;
+  opacity: 0.9;
+}
+
+/* Large Illustration Banner Section */
+.banner-illustration {
+  margin: 80px 0;
+  text-align: center;
+  position: relative;
+}
+
+.banner-illustration img {
+  max-width: 90%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+}
+
+.banner-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(8px);
+  padding: 30px 50px;
+  border-radius: 16px;
+  max-width: 700px;
+}
+
+.banner-content h2 {
+  font-size: 38px;
+  margin-bottom: 16px;
+  color: #8b4513;
+}
+
+.banner-content p {
+  font-size: 18px;
+  color: #A0522D;
+  margin-bottom: 24px;
+}
+
+.btn-view {
+  padding: 14px 36px;
+  background: linear-gradient(90deg, #F18966, #A0522D);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(168, 85, 247, 0.3);
+  transition: all 0.3s;
+}
+
+.btn-view:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 40px rgba(168, 85, 247, 0.4);
+}
+
+
+/* ===============================
+   NAVBAR STYLES (moved out of component)
+=================================*/
+
+.app-navbar {
+  width: 72px;
+  flex-shrink: 0;
+}
+
+.app-navbar .MuiDrawer-paper {
+  width: 72px;
+  box-sizing: border-box;
+  background: linear-gradient(180deg, #fff2e6, #fff4eb);
+  border-right: none;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.05);
+}
+
+.app-navbar .nav-button {
+  justify-content: center;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  border-radius: 24px;
+  margin: 4px 8px;
+  transition: all 0.3s ease;
+  background-color: transparent;
+}
+
+.app-navbar .nav-button:hover {
+  background-color: #65350F;
+  transform: scale(1.08);
+}
+
+.app-navbar .nav-button.active {
+  background-color: #fff2e6;
+}
+
+.app-navbar .nav-button .nav-icon {
+  min-width: 0;
+  justify-content: center;
+  color: #65350F;
+  transition: color 0.3s ease;
+}
+
+.app-navbar .nav-button:hover .nav-icon {
+  color: #fff2e6;
+}
+
+.app-navbar .nav-button.active .nav-icon {
+  color: #65350F;
+}
+
+.app-navbar .app-navbar-content {
+  overflow: auto;
+  margin-top: 16px;
+}
+
+/* Bottom Icons (moon, heart, bookmark) */
+.bottom-actions {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  z-index: 100;
+}
+
+.action-btn {
+  width: 48px;
+  height: 48px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: #A0522D;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.action-btn:hover {
+  transform: scale(1.15);
+  background: #fff2e6;
+}
+
+/* AI Chat / Floating Chat Area (right side) */
+.ai-chat-sidebar {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 380px;
+  background: white;
+  box-shadow: -10px 0 40px rgba(0,0,0,0.08);
+  border-left: 1px solid #e5d5f9;
+  z-index: 200;
+  overflow-y: auto;
+}
+
+/* Chat bubble / message style (approximation) */
+.chat-message {
+  background: #fff2e6;
+  border-radius: 18px 18px 18px 4px;
+  padding: 14px 18px;
+  margin: 16px 20px;
+  max-width: 80%;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #3f2a66;
+}
+
+/* Input area at bottom of chat */
+.chat-input-area {
+  position: sticky;
+  bottom: 0;
+  background: white;
+  padding: 16px 20px;
+  border-top: 1px solid #e5d5f9;
+  display: flex;
+  gap: 12px;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 12px 18px;
+  border: 1px solid #FAD7A0;
+  border-radius: 50px;
+  font-size: 14px;
+}
+
+.chat-send-btn {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #F18966, #A0522D);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1100px) {
+  .ai-chat-sidebar {
+    width: 320px;
+  }
+}
+
+@media (max-width: 768px) {
+  .search-container {
+    max-width: 340px;
+  }
+  
+  .category-pills {
+    gap: 10px;
+    padding: 0 15px;
+  }
+  
+  .book-item {
+    flex: 0 0 140px;
+  }
+  
+  .banner-content {
+    padding: 20px 30px;
+  }
+  
+  .banner-content h2 {
+    font-size: 28px;
+  }
+}
