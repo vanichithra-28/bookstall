@@ -18,6 +18,7 @@ import {
   Home05Icon,
   Logout01Icon,
   Bookshelf03Icon,
+  UserAdd01Icon,
 } from "@hugeicons/core-free-icons";
 
 export const drawerWidth = 72;
@@ -31,6 +32,7 @@ const Navbar = () => {
     { text: "Cart", to: "/cart", icon: ShoppingCart01Icon },
     { text: "Orders", to: "/orders", icon: Invoice01Icon },
     { text: "Login", to: "/login", icon: Login01Icon },
+     { text: "profile", to: "./admin", icon: UserAdd01Icon },
     
   ];
 

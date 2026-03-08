@@ -12,6 +12,7 @@ import Category from "./modules/customer/pages/Category"
 import { Box, Toolbar } from '@mui/material'
 import Booklist from "./modules/customer/pages/Booklist"
 import Checkout from "./modules/customer/pages/Checkout"
+import AdminDashboard from "./modules/admin/AdminDashboard"
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <Box component="main" sx={{ flexGrow: 1, p: 3, ml: `${drawerWidth}px` }}>
         <Toolbar />
         <Routes>
+          
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
