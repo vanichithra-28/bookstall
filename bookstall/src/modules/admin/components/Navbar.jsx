@@ -14,10 +14,11 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Home05Icon,
   Bookshelf03Icon,
-  
+  User03Icon,
+  LibraryIcon,
+  DiscountTag02Icon,
+  ShoppingBasket01Icon,
   Logout01Icon,
-  ShoppingCart01Icon,
-  Invoice01Icon,
 } from "@hugeicons/core-free-icons";
 
 export const drawerWidth = 72;
@@ -26,10 +27,12 @@ const Navbar = ({ onLogout }) => {
   const location = useLocation();
 
   const menuItems = [
-    { text: "Home", to: "/customer", icon: Home05Icon },
-    { text: "Categories", to: "/customer/categories", icon: Bookshelf03Icon },
-    { text: "Cart", to: "/customer/cart", icon: ShoppingCart01Icon },
-    { text: "Orders", to: "/customer/orders", icon: Invoice01Icon },
+    { text: "Dashboard", to: "/admin", icon: Home05Icon }, // fixed path
+    { text: "Manage Books", to: "/admin/books", icon: LibraryIcon },
+    { text: "Categories", to: "/admin/categories", icon: Bookshelf03Icon },
+    { text: "Customers", to: "/admin/customers", icon: User03Icon },
+    { text: "Stock", to: "/admin/stock", icon: ShoppingBasket01Icon },
+    { text: "Sales", to: "/admin/sales", icon: DiscountTag02Icon },
   ];
 
   return (

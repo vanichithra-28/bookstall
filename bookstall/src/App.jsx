@@ -1,47 +1,74 @@
-import { Routes, Route } from "react-router-dom"
-import Navbar, { drawerWidth } from "./modules/customer/components/Navbar"
-import Home from "./modules/customer/pages/Home"
-import Login from "./modules/customer/pages/Login"
-import Register from "./modules/customer/pages/Register"
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useState } from "react";
+import './App.css';
+import AdminRoutes from './modules/admin/AdminRoutes';
+import CustomerRoutes from './modules/customer/CustomerRoutes';
+import StaffRoutes from './modules/staff/StaffRoutes';
+import Login from './pages/Login';
+import Register from './pages/Register';
 
-import Orders from "./modules/customer/pages/Orders"
-import './App.css'
-import Shop from "./modules/customer/pages/Shop"
-import Books from "./modules/customer/pages/Books"
-import Category from "./modules/customer/pages/Category"
-import { Box, Toolbar } from '@mui/material'
-import Booklist from "./modules/customer/pages/Booklist"
-import Checkout from "./modules/customer/pages/Checkout"
-import AdminDashboard from "./modules/admin/AdminDashboard"
+// ProtectedRoute wrapper
+const ProtectedRoute = ({ role, allowedRoles, children }) => {
+  if (!role) return <Navigate to="/login" replace />;
+  if (!allowedRoles.includes(role)) return <Navigate to="/login" replace />;
+  return children;
+};
 
 function App() {
+  // Use a function to initialize state so it only runs once
+  const [role, setRole] = useState(() => localStorage.getItem("role"));
+
+  const handleLogout = () => {
+    localStorage.clear(); // Clears everything to be safe
+    setRole(null);
+  };
+
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Navbar />
-  
-      {/* Add Toolbar here to offset the fixed drawer if any */}
-      <Box component="main" sx={{ flexGrow: 1, p: 3, ml: `${drawerWidth}px` }}>
-        <Toolbar />
-        <Routes>
-          
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/cart" element={<Shop />} />
-          <Route path="/categories" element={<Category />} />
-          <Route path="/booklist/:id" element={<Booklist />} />
-          <Route path="/books/:id" element={<Books />} />
-          <Route path="/cart" element={<Shop />} /> 
-          <Route path="/orders" element={<Orders />} />
-          <Route path="/checkout" element={<Checkout />} />
+    <Routes>
+      <Route path="/login" element={<Login onLogin={setRole} />} />
+      <Route path="/register" element={<Register />} />
 
+      <Route
+        path="/admin/*"
+        element={
+          <ProtectedRoute role={role} allowedRoles={["admin"]}>
+            <AdminRoutes onLogout={handleLogout} />
+          </ProtectedRoute>
+        }
+      />
 
-          
-    
-        </Routes>
-      </Box>
-    </Box>
-  )
+      <Route
+        path="/staff/*"
+        element={
+          <ProtectedRoute role={role} allowedRoles={["staff"]}>
+            <StaffRoutes onLogout={handleLogout} />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/customer/*"
+        element={
+          <ProtectedRoute role={role} allowedRoles={["customer"]}>
+            <CustomerRoutes onLogout={handleLogout} />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Simplified Redirect Logic */}
+      <Route
+        path="/"
+        element={
+          role === "admin" ? <Navigate to="/admin" replace /> :
+          role === "staff" ? <Navigate to="/staff" replace /> :
+          role === "customer" ? <Navigate to="/customer" replace /> :
+          <Navigate to="/login" replace />
+        }
+      />
+
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
 }
 
-export default App
+export default App;

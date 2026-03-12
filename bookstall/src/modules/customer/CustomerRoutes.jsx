@@ -1,0 +1,37 @@
+import { Box, Toolbar } from "@mui/material";
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Navbar, { drawerWidth } from "./components/Navbar";
+import Home from "./pages/Home";
+import Shop from "./pages/Shop";
+import Category from "./pages/Category";
+import Booklist from "./pages/Booklist";
+import Books from "./pages/Books";
+import Orders from "./pages/Orders";
+import Checkout from "./pages/Checkout";
+
+const CustomerRoutes = ({ onLogout }) => {
+  return (
+    <Box sx={{ display: "flex" }}>
+      <Navbar onLogout={onLogout} /> {/* pass logout handler */}
+      <Box component="main" sx={{ flexGrow: 1, p: 3, ml: `${drawerWidth}px` }}>
+        <Toolbar />
+        <Routes>
+          {/* Default dashboard */}
+          <Route path="" element={<Home />} />
+          {/* Customer pages (relative paths) */}
+          <Route path="cart" element={<Shop />} />
+          // CustomerRoutes.jsx
+          <Route path="categories" element={<Category />} />
+          <Route path="categories/:catName" element={<Category />} />
+          
+          <Route path="books/:id" element={<Books />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="checkout" element={<Checkout />} />
+        </Routes>
+      </Box>
+    </Box>
+  );
+};
+
+export default CustomerRoutes;

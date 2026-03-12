@@ -1,6 +1,5 @@
 
 import React, { useState } from "react";
-import Navbar from "../Navbar";
 import {
   Container,
   Typography,
@@ -11,8 +10,10 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  Paper
+  Paper,
+  Box
 } from "@mui/material";
+import Navbar from "../components/Navbar";
 
 function ManageCustomers() {
   const [name, setName] = useState("");
@@ -41,10 +42,10 @@ function ManageCustomers() {
   };
 
   return (
-    <>
-      <Navbar />
+    <div style={{ background: 'linear-gradient(135deg, #fff4eb 0%, #fff2e6 100%)', minHeight: '100vh', py: 5 }}>
 
       <Container sx={{ marginTop: 4 }}>
+        <Box sx={{ mb: 6 }}>
         <Typography
           variant="h4"
           gutterBottom
@@ -99,8 +100,10 @@ function ManageCustomers() {
             </TableBody>
           </Table>
         </Paper>
+          </Box>
       </Container>
-    </>
+    
+    </div>
   );
 }
 

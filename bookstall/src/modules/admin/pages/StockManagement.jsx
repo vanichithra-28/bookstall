@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Navbar from "../Navbar";
 import {
   Container,
   Typography,
@@ -12,6 +11,7 @@ import {
   TableBody,
   Paper
 } from "@mui/material";
+import Navbar from "../components/Navbar";
 
 function StockManagement() {
 

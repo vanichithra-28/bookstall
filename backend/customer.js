@@ -6,7 +6,12 @@ var customerSchema = mongoose.Schema({
   username: String,
   email: String,
   phonenumber: Number,
-  password: String
+  password: String,
+  role: { 
+    type: String, 
+    enum: ["customer", "staff", "admin"], 
+    default: "customer"   // ← most users are customers
+  },
 });
 
 // create model

@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import axios from "axios";
+
 
 import {
   Box,
@@ -13,28 +12,15 @@ import {
 
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
+import {  useNavigate } from "react-router-dom";
 
 function AdminLogin() {
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+   const navigate = useNavigate();
 
   const loginAdmin = async () => {
 
-    try {
-
-      await axios.post("http://localhost:5000/admin/login", {
-        email,
-        password
-      });
-
-      alert("Login Successful");
-
-    } catch (error) {
-
-      alert("Invalid Login");
-
-    }
+   navigate("/admin/dashboard");
 
   };
 
@@ -83,7 +69,6 @@ function AdminLogin() {
             label="Email"
             fullWidth
             margin="normal"
-            onChange={(e)=>setEmail(e.target.value)}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -98,7 +83,6 @@ function AdminLogin() {
             type="password"
             fullWidth
             margin="normal"
-            onChange={(e)=>setPassword(e.target.value)}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
