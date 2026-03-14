@@ -37,8 +37,7 @@ const submitHandler = async () => {
       role: "customer"          // ← force customer role here
     };
 
-    const response = await axios.post("http://localhost:3008/register", payload);
-
+const response = await axios.post("http://localhost:3008/customers/register", payload);
     alert(response.data.message || "Registration successful! Please login.");
     navigate("/login");
   } catch (err) {

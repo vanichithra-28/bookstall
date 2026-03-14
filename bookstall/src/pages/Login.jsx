@@ -6,9 +6,10 @@ import { Link, useNavigate } from "react-router-dom";
 const Login = ({ onLogin }) => {
   const [inputs, setInputs] = useState({
     email: "",
-    password: ""
+    password: "",
   });
 
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const inputHandler = (e) => {
@@ -16,22 +17,33 @@ const Login = ({ onLogin }) => {
   };
 
   const signinHandler = async () => {
+    setLoading(true);
     try {
-      const response = await axios.post("http://localhost:3008/login", inputs);
+      const response = await axios.post(
+        "http://localhost:3008/customers/login",
+        inputs
+      );
       const { success, user, message } = response.data;
 
       if (success) {
+        // Store customer ID and role
+        localStorage.setItem("customerId", user._id);
         localStorage.setItem("role", user.role);
         localStorage.setItem("user", JSON.stringify(user));
-        onLogin(user.role);  // Update App state immediately
+
+        // Update app state
+        onLogin(user.role);
+
         alert(message || "Login successful!");
-        navigate("/");       // Go to dashboard
+        navigate("/"); // Redirect to dashboard
       } else {
         alert(message || "Login failed");
       }
     } catch (error) {
       console.error("Login error:", error);
       alert(error.response?.data?.message || "Something went wrong. Try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,7 +59,10 @@ const Login = ({ onLogin }) => {
       <Container maxWidth="sm">
         <Box sx={{ mt: 2 }}>
           <Box sx={{ textAlign: "center", mb: 5 }}>
-            <Typography variant="h3" sx={{ fontWeight: 700, color: "#65350F", mb: 1 }}>
+            <Typography
+              variant="h3"
+              sx={{ fontWeight: 700, color: "#65350F", mb: 1 }}
+            >
               Welcome Back
             </Typography>
             <Typography sx={{ color: "#a0522d", fontSize: "1rem" }}>
@@ -92,8 +107,9 @@ const Login = ({ onLogin }) => {
               },
             }}
             onClick={signinHandler}
+            disabled={loading}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </Button>
 
           <Typography sx={{ mt: 4, textAlign: "center", color: "#666" }}>
