@@ -1,108 +1,131 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Typography,
-  TextField,
-  Button,
   Table,
   TableHead,
   TableRow,
   TableCell,
   TableBody,
   Paper,
-  Box
+  Box,
+  Button,
 } from "@mui/material";
-import Navbar from "../components/Navbar";
+import axios from "axios";
 
 function ManageCustomers() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
   const [customers, setCustomers] = useState([]);
 
-  const addCustomer = () => {
-    if (!name || !email || !phone) {
-      alert("Please fill all fields");
-      return;
-    }
-
-    const newCustomer = {
-      id: Date.now(),
-      name,
-      email,
-      phone
+  // Fetch customers with role = "customer"
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      try {
+        const res = await axios.get("http://localhost:3008/customers/customer");
+        setCustomers(res.data);
+      } catch (error) {
+        console.error("Error fetching customers:", error);
+      }
     };
+    fetchCustomers();
+  }, []);
 
-    setCustomers([...customers, newCustomer]);
-
-    setName("");
-    setEmail("");
-    setPhone("");
+  // Handle status update
+  const handleStatus = async (id, newStatus) => {
+    try {
+      const res = await axios.put(
+        `http://localhost:3008/customers/${id}/status`,
+        { status: newStatus }
+      );
+      setCustomers(customers.map(c => c._id === id ? res.data : c));
+    } catch (err) {
+      console.error("Status update error:", err);
+      alert("Failed to update status.");
+    }
   };
 
   return (
-    <div style={{ background: 'linear-gradient(135deg, #fff4eb 0%, #fff2e6 100%)', minHeight: '100vh', py: 5 }}>
-
-      <Container sx={{ marginTop: 4 }}>
+    <div
+      style={{
+        background: "linear-gradient(135deg, #fdf6f0 0%, #fef9f6 100%)", // pastel cream gradient
+        minHeight: "100vh",
+        paddingTop: "40px",
+      }}
+    >
+      <Container>
         <Box sx={{ mb: 6 }}>
-        <Typography
-          variant="h4"
-          gutterBottom
-          sx={{ fontWeight: "bold", color: "#1976d2" }}
-        >
-          Customer Management
-        </Typography>
+          <Typography
+            variant="h4"
+            gutterBottom
+            sx={{ fontWeight: "bold", color: "#65350F" }} // lavender heading
+          >
+          Customers
+          </Typography>
 
-        <TextField
-          label="Customer Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          sx={{ marginRight: 2 }}
-        />
-
-        <TextField
-          label="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          sx={{ marginRight: 2 }}
-        />
-
-        <TextField
-          label="Phone"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          sx={{ marginRight: 2 }}
-        />
-
-        <Button variant="contained" onClick={addCustomer}>
-          Add Customer
-        </Button>
-
-        <Paper sx={{ marginTop: 4 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Phone</TableCell>
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {customers.map((customer) => (
-                <TableRow key={customer.id}>
-                  <TableCell>{customer.name}</TableCell>
-                  <TableCell>{customer.email}</TableCell>
-                  <TableCell>{customer.phone}</TableCell>
+          <Paper sx={{ marginTop: 4, borderRadius: 3, boxShadow: "0 6px 18px rgba(0,0,0,0.08)" }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell><b>Name</b></TableCell>
+                  <TableCell><b>Email</b></TableCell>
+                  <TableCell><b>Phone</b></TableCell>
+                  <TableCell><b>Status</b></TableCell>
+                  <TableCell><b>Action</b></TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Paper>
-          </Box>
+              </TableHead>
+
+              <TableBody>
+                {customers.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} align="center">
+                      No customers found.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  customers.map((customer) => (
+                    <TableRow key={customer._id} hover>
+                      <TableCell>{customer.username}</TableCell>
+                      <TableCell>{customer.email}</TableCell>
+                      <TableCell>{customer.phonenumber}</TableCell>
+                      <TableCell>{customer.status}</TableCell>
+                      <TableCell>
+                        {customer.status === "pending" ? (
+                          <>
+                            <Button
+                              variant="contained"
+                              sx={{
+                                mr: 1,
+                                bgcolor: "#a3d2ca", // pastel teal
+                                "&:hover": { bgcolor: "#5eaaa8" },
+                              }}
+                              onClick={() => handleStatus(customer._id, "accepted")}
+                            >
+                              Accept
+                            </Button>
+                            <Button
+                              variant="contained"
+                              sx={{
+                                bgcolor: "#ffc8dd", // pastel blush
+                                "&:hover": { bgcolor: "#ffafcc" },
+                              }}
+                              onClick={() => handleStatus(customer._id, "rejected")}
+                            >
+                              Reject
+                            </Button>
+                          </>
+                        ) : (
+                          <Typography>
+                            {customer.status.charAt(0).toUpperCase() + customer.status.slice(1)}
+                          </Typography>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </Paper>
+        </Box>
       </Container>
-    
     </div>
   );
 }

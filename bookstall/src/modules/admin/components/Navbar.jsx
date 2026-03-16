@@ -19,6 +19,7 @@ import {
   DiscountTag02Icon,
   ShoppingBasket01Icon,
   Logout01Icon,
+  UserMultiple02Icon,
 } from "@hugeicons/core-free-icons";
 
 export const drawerWidth = 72;
@@ -33,6 +34,7 @@ const Navbar = ({ onLogout }) => {
     { text: "Customers", to: "/admin/customers", icon: User03Icon },
     { text: "Stock", to: "/admin/stock", icon: ShoppingBasket01Icon },
     { text: "Sales", to: "/admin/sales", icon: DiscountTag02Icon },
+      { text: "Staff Registration", to: "/admin/staff-registration", icon: UserMultiple02Icon },
   ];
 
   return (

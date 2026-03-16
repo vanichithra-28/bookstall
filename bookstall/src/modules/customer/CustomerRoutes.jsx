@@ -5,7 +5,6 @@ import Navbar, { drawerWidth } from "./components/Navbar";
 import Home from "./pages/Home";
 import Shop from "./pages/Shop";
 import Category from "./pages/Category";
-import Booklist from "./pages/Booklist";
 import Books from "./pages/Books";
 import Orders from "./pages/Orders";
 import Checkout from "./pages/Checkout";
@@ -13,21 +12,24 @@ import Checkout from "./pages/Checkout";
 const CustomerRoutes = ({ onLogout }) => {
   return (
     <Box sx={{ display: "flex" }}>
-      <Navbar onLogout={onLogout} /> {/* pass logout handler */}
+      <Navbar onLogout={onLogout} />
+
       <Box component="main" sx={{ flexGrow: 1, p: 3, ml: `${drawerWidth}px` }}>
         <Toolbar />
+
         <Routes>
-          {/* Default dashboard */}
           <Route path="" element={<Home />} />
-          {/* Customer pages (relative paths) */}
-          <Route path="cart" element={<Shop />} />
-          // CustomerRoutes.jsx
+
+          {/* Customer pages */}
           <Route path="categories" element={<Category />} />
           <Route path="categories/:catName" element={<Category />} />
-          
+
           <Route path="books/:id" element={<Books />} />
           <Route path="orders" element={<Orders />} />
           <Route path="checkout" element={<Checkout />} />
+          <Route path="cart" element={<Shop />} />
+
+          <Route path="*" element={<Home />} />
         </Routes>
       </Box>
     </Box>

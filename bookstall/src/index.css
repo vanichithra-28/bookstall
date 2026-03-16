@@ -1,5 +1,4 @@
 /* Reset & Base Styles */
-
 * {
   margin: 0;
   padding: 0;
@@ -13,8 +12,8 @@ html, body {
 
 body {
   font-family: 'Poppins', sans-serif;
-  background-color: #f5f1eb;   /* Soft beige background */
-  color: #65350F;              /* Dark text */
+  background-color: #fdf6f0;   /* pastel cream background */
+  color: #4a3f35;              /* soft brown text */
   line-height: 1.6;
 }
 
@@ -26,6 +25,37 @@ a {
 button {
   font-family: inherit;
   cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  background-color: #a3d2ca;   /* pastel teal */
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
 
-  
+button:hover {
+  background-color: #6a5acd;   /* deeper teal on hover */
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+  font-family: 'Playfair Display', serif;
+  color: #65350F; /* pastel lavender */
+}
+
+/* Utility Classes */
+.text-muted {
+  color: #7d7d7d; /* soft gray */
+}
+
+.bg-pastel-pink {
+  background-color: #f8d7da; /* blush pink */
+}
+
+.bg-pastel-blue {
+  background-color: #cce7ff; /* soft sky blue */
+}
+
+.bg-pastel-yellow {
+  background-color: #fff9db; /* light butter yellow */
 }

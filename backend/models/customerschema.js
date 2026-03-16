@@ -11,7 +11,9 @@ var customerSchema = mongoose.Schema({
     type: String, 
     enum: ["customer", "staff", "admin"], 
     default: "customer"   // ← most users are customers
+    
   },
+  status: { type: String, enum: ["pending", "accepted", "rejected"], default: "pending" }
 });
 
 // create model

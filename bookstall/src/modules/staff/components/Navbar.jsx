@@ -18,19 +18,21 @@ import {
   Logout01Icon,
   ShoppingCart01Icon,
   Invoice01Icon,
+  User02FreeIcons,
+  LibraryIcon,
 } from "@hugeicons/core-free-icons";
 
 export const drawerWidth = 72;
 
 const Navbar = ({ onLogout }) => {
   const location = useLocation();
-
-  const menuItems = [
-    { text: "Home", to: "/customer", icon: Home05Icon },
-    { text: "Categories", to: "/customer/categories", icon: Bookshelf03Icon },
-    { text: "Cart", to: "/customer/cart", icon: ShoppingCart01Icon },
-    { text: "Orders", to: "/customer/orders", icon: Invoice01Icon },
-  ];
+const menuItems = [
+  { text: "Home", to: "/staff", icon: Home05Icon },
+  { text: "Profile", to: "/staff/profile", icon: User02FreeIcons },
+  { text: "Update Stocks", to: "/staff/update-stocks", icon: Bookshelf03Icon },
+  { text: "View Books", to: "/staff/view-books", icon: LibraryIcon },
+  { text: "Billing", to: "/staff/billing", icon: Invoice01Icon },
+];
 
   return (
     <Drawer variant="permanent" className="app-navbar">

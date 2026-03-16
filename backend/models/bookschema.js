@@ -8,7 +8,8 @@ var bookSchema = mongoose.Schema({
   price: Number,
   category: String,
   image: String,
-  
+  stock: Number,
+  featured: { type: Boolean, default: false },
 });
 
 // create model

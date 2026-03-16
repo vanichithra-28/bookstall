@@ -8,6 +8,7 @@ import ManageCategories from './pages/ManageCategories';
 import ManageCustomers from './pages/ManageCustomers';
 import StockManagement from './pages/StockManagement';
 import Sales from './pages/Sales';
+import StaffRegistration from './pages/StaffRegistration';
 
 const AdminRoutes = ({ onLogout }) => {
   return (
@@ -32,6 +33,7 @@ const AdminRoutes = ({ onLogout }) => {
           <Route path="customers" element={<ManageCustomers />} />
           <Route path="stock" element={<StockManagement />} />
           <Route path="sales" element={<Sales />} />
+          <Route path="staff-registration" element={<StaffRegistration />} />
         </Routes>
       </Box>
     </Box>

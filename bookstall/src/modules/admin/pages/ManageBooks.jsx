@@ -28,15 +28,17 @@ function ManageBooks() {
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
   const [bookImage, setBookImage] = useState("");
-
+  const [stock, setStock] = useState("");
   const [editId, setEditId] = useState(null);
 
+  
   useEffect(() => {
-
     const fetchBooks = async () => {
       const res = await axios.get("http://localhost:3008/books");
-      setBooks(res.data);
+      setBooks(Array.isArray(res.data) ? res.data : res.data.data || []);
     };
+
+
 
     const fetchCategories = async () => {
       const res = await axios.get("http://localhost:3008/categories");
@@ -50,7 +52,7 @@ function ManageBooks() {
 
   const handleAddBook = async () => {
 
-    if (!bookName || !author || !price || !category) {
+    if (!bookName || !author || !price || !category|| !stock) {
       alert("Fill required fields");
       return;
     }
@@ -60,7 +62,8 @@ function ManageBooks() {
       author,
       price: Number(price),
       category,
-      image: bookImage || "https://via.placeholder.com/150"
+      image: bookImage || "https://via.placeholder.com/150",
+      stock: Number(stock)
     };
 
     if (editId) {
@@ -88,14 +91,19 @@ function ManageBooks() {
     setPrice("");
     setCategory("");
     setBookImage("");
+    setStock("");
   };
 
-  const handleDelete = async (id) => {
-
+ const handleDelete = async (id) => {
+  try {
     await axios.delete(`http://localhost:3008/books/${id}`);
+    setBooks(books.filter((b) => b._id !== id && b.id !== id));
+  } catch (err) {
+    console.error("Delete failed:", err.response?.data || err.message);
+    alert("Could not delete book. Check backend route/ID.");
+  }
+};
 
-    setBooks(books.filter((b) => b._id !== id));
-  };
 
   const handleEdit = (book) => {
 
@@ -104,7 +112,7 @@ function ManageBooks() {
     setPrice(book.price);
     setCategory(book.category);
     setBookImage(book.image);
-
+    setStock(book.stock);
     setEditId(book._id);
 
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -214,6 +222,15 @@ function ManageBooks() {
                 onChange={(e) => setBookImage(e.target.value)}
               />
             </Grid>
+            <Grid item xs={12} md={4}>
+              <TextField
+                label="Stock"
+                type="number"
+                fullWidth
+                value={stock}
+                onChange={(e) => setStock(e.target.value)}
+              />
+            </Grid>
 
             <Grid item xs={12}>
               <Button
@@ -249,6 +266,8 @@ function ManageBooks() {
 
               <Card
                 sx={{
+                   width: 220,
+                 height: "100%",
                   borderRadius: 3,
                   boxShadow: "0 4px 12px rgba(101,53,15,0.08)",
                   transition: "0.25s",

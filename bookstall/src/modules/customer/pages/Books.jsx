@@ -10,10 +10,11 @@ import {
   Chip,
 } from "@mui/material";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const Booklist = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [book, setBook] = useState(null);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -42,6 +43,28 @@ const Booklist = () => {
     const cat = categories.find((c) => c._id === catId);
     return cat ? cat.name : "Unknown";
   };
+
+const handleAddToCart = async () => {
+  try {
+    const user = JSON.parse(localStorage.getItem("user"));  
+    const customerid = user._id;   // logged-in user id
+
+    await axios.post("http://localhost:3008/cart/add", {
+      bookId: book._id,
+      bookname: book.name,
+      price: book.price,       // ✅ send price instead of total_price
+      quantity: 1,
+      customerid,
+      image: book.image
+    });
+
+    alert("Added to cart");
+    navigate("/cart");
+
+  } catch (err) {
+    console.error(err);
+  }
+};
 
   return (
     <Box
@@ -119,9 +142,7 @@ const Booklist = () => {
                   "&:hover": { backgroundColor: "#65350F" },
                   fontWeight: 600,
                 }}
-                onClick={() =>
-                  alert(`Added "${book.name}" to cart! (feature coming soon)`)
-                }
+                onClick={handleAddToCart}
               >
                 Add to Cart
               </Button>
