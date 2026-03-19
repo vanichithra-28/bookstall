@@ -116,5 +116,21 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+// 🔹 Update stock
+router.put("/update-stock/:id", async (req, res) => {
+  try {
+    const { stock } = req.body;
+
+    const updatedBook = await Book.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { stock: stock } }, // adds stock
+      { new: true }
+    );
+
+    res.json(updatedBook);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 module.exports = router;

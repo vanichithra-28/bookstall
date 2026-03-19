@@ -14,6 +14,36 @@ import {
   Divider,
 } from "@mui/material";
 import axios from "axios";
+import { motion, AnimatePresence } from "framer-motion";
+
+/* Motion wrappers */
+const MotionBox = motion.create(Box);
+const MotionTypography = motion.create(Typography);
+
+/* Floating Books */
+const FloatingBook = ({ delay, x, y, rotation }) => (
+  <MotionBox
+    initial={{ opacity: 0, scale: 0 }}
+    animate={{
+      opacity: [0.1, 0.2, 0.1],
+      scale: 1,
+      y: [0, -15, 0],
+      rotate: [rotation, rotation + 5, rotation],
+    }}
+    transition={{ duration: 4, repeat: Infinity, delay }}
+    sx={{
+      position: "absolute",
+      left: x,
+      top: y,
+      width: 40,
+      height: 50,
+      background: "linear-gradient(135deg, #a0522d, #65350F)",
+      borderRadius: "2px 6px 6px 2px",
+      pointerEvents: "none",
+      zIndex: 0,
+    }}
+  />
+);
 
 const StaffRegistration = () => {
   const [staffName, setStaffName] = useState("");
@@ -23,22 +53,20 @@ const StaffRegistration = () => {
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState(null);
   const [staffList, setStaffList] = useState([]);
-  const [editingStaff, setEditingStaff] = useState(null); // track staff being edited
+  const [editingStaff, setEditingStaff] = useState(null);
 
-  // Fetch staff list on mount
   useEffect(() => {
     const fetchStaff = async () => {
       try {
         const res = await axios.get("http://localhost:3008/customers/staff");
-        setStaffList(res.data); // backend already returns staff only
+        setStaffList(res.data);
       } catch (error) {
-        console.error("Error fetching staff:", error);
+        console.error(error);
       }
     };
     fetchStaff();
   }, []);
 
-  // Register or Update staff
   const handleRegisterOrUpdate = async () => {
     if (!staffName || !email || !phoneNumber || (!password && !editingStaff)) {
       setFeedback({ type: "error", message: "Please fill all required fields" });
@@ -49,220 +77,173 @@ const StaffRegistration = () => {
       username: staffName,
       email,
       phonenumber: phoneNumber,
-      ...(password && { password }), // only send password if provided
+      ...(password && { password }),
       role: "staff",
     };
 
     setLoading(true);
     try {
       if (editingStaff) {
-        // Update existing staff
         const res = await axios.put(
           `http://localhost:3008/customers/staff/${editingStaff}`,
           staffData
         );
-        setFeedback({ type: "success", message: res.data.message });
         setStaffList(
           staffList.map((s) => (s._id === editingStaff ? res.data.user : s))
         );
         setEditingStaff(null);
       } else {
-        // Register new staff
         const res = await axios.post(
           "http://localhost:3008/customers/register",
           staffData
         );
-        setFeedback({ type: "success", message: res.data.message });
         setStaffList([...staffList, res.data.user]);
       }
 
-      // clear form
+      setFeedback({ type: "success", message: "Success" });
       setStaffName("");
       setEmail("");
       setPhoneNumber("");
       setPassword("");
     } catch (error) {
-      console.error("Registration/Update error:", error);
       setFeedback({
         type: "error",
-        message: error.response?.data?.message || "Something went wrong",
+        message: error.response?.data?.message || "Error",
       });
     } finally {
       setLoading(false);
     }
   };
 
-  // Populate form for editing
   const handleEdit = (staff) => {
     setStaffName(staff.username);
     setEmail(staff.email);
     setPhoneNumber(staff.phonenumber);
-    setPassword(""); // leave blank for security
+    setPassword("");
     setEditingStaff(staff._id);
   };
 
-  // Delete staff
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:3008/customers/staff/${id}`);
       setStaffList(staffList.filter((s) => s._id !== id));
-      setFeedback({ type: "success", message: "Staff deleted successfully" });
+      setFeedback({ type: "success", message: "Deleted" });
     } catch (error) {
-      setFeedback({
-        type: "error",
-        message: error.response?.data?.message || "Delete failed",
-      });
+      console.error(error);
+      setFeedback({ type: "error", message: "Delete failed" });
     }
   };
 
   return (
-    <Box
+    <MotionBox
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       sx={{
         background: "linear-gradient(135deg, #fff4eb 0%, #fff2e6 100%)",
         minHeight: "100vh",
         py: 6,
+        position: "relative",
+        overflow: "hidden",
       }}
     >
-      <Container maxWidth="sm">
-        <Paper
+      {/* Floating Books */}
+      <FloatingBook delay={0} x="5%" y="15%" rotation={-15} />
+      <FloatingBook delay={0.5} x="90%" y="20%" rotation={10} />
+      <FloatingBook delay={1} x="85%" y="75%" rotation={-10} />
+
+      <Container maxWidth="sm" sx={{ position: "relative", zIndex: 1 }}>
+        
+        {/* Title Animation */}
+        <MotionTypography
+          variant="h3"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
           sx={{
-            p: 5,
-            borderRadius: 3,
-            boxShadow: "0 6px 18px rgba(101,53,15,0.12)",
-            mb: 6,
+            fontWeight: 700,
+            color: "#65350F",
+            mb: 3,
+            textAlign: "center",
           }}
         >
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: 700, color: "#65350F", mb: 3, textAlign: "center" }}
-          >
-            Staff Registration
-          </Typography>
+          Staff Registration
+        </MotionTypography>
 
-          {feedback && (
-            <Alert severity={feedback.type} sx={{ mb: 3, borderRadius: 2 }}>
-              {feedback.message}
-            </Alert>
-          )}
+        {/* Form */}
+        <MotionBox initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
+          <Paper sx={{ p: 5, borderRadius: 3, mb: 6 }}>
+            {feedback && (
+              <Alert severity={feedback.type} sx={{ mb: 3 }}>
+                {feedback.message}
+              </Alert>
+            )}
 
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <TextField
-                label="Full Name"
-                fullWidth
-                value={staffName}
-                onChange={(e) => setStaffName(e.target.value)}
-              />
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <TextField label="Full Name" fullWidth value={staffName} onChange={(e) => setStaffName(e.target.value)} />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField label="Email" fullWidth value={email} onChange={(e) => setEmail(e.target.value)} />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField label="Phone Number" fullWidth value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField label="Password" type="password" fullWidth value={password} onChange={(e) => setPassword(e.target.value)} />
+              </Grid>
+
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  onClick={handleRegisterOrUpdate}
+                  sx={{ bgcolor: "#F18966" }}
+                >
+                  {loading ? "Processing..." : editingStaff ? "Update Staff" : "Register Staff"}
+                </Button>
+              </Grid>
             </Grid>
-
-            <Grid item xs={12}>
-              <TextField
-                label="Email"
-                fullWidth
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <TextField
-                label="Phone Number"
-                fullWidth
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <TextField
-                label="Password"
-                type="password"
-                fullWidth
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                fullWidth
-                onClick={handleRegisterOrUpdate}
-                disabled={loading}
-                sx={{
-                  bgcolor: "#F18966",
-                  "&:hover": { bgcolor: "#a0522d" },
-                  py: 1.2,
-                  fontWeight: 600,
-                  borderRadius: 2,
-                }}
-              >
-                {loading
-                  ? "Processing..."
-                  : editingStaff
-                  ? "Update Staff"
-                  : "Register Staff"}
-              </Button>
-            </Grid>
-          </Grid>
-        </Paper>
+          </Paper>
+        </MotionBox>
 
         {/* Staff List */}
-        <Paper
-          sx={{
-            p: 4,
-            borderRadius: 3,
-            boxShadow: "0 6px 18px rgba(101,53,15,0.08)",
-          }}
-        >
-          <Typography
-            variant="h5"
-            sx={{ fontWeight: 700, color: "#65350F", mb: 3 }}
-          >
-            Staff Members
-          </Typography>
-
-          {staffList.length === 0 ? (
-            <Typography sx={{ color: "#a0522d" }}>
-              No staff registered yet.
+        <MotionBox initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <Paper sx={{ p: 4, borderRadius: 3 }}>
+            <Typography variant="h5" sx={{ fontWeight: 700, color: "#65350F", mb: 3 }}>
+              Staff Members
             </Typography>
-          ) : (
+
             <List>
-              {staffList.map((staff) => (
-                <React.Fragment key={staff._id}>
-                  <ListItem
-                    secondaryAction={
-                      <Box>
-                        <Button
-                          size="small"
-                          sx={{ mr: 1 }}
-                          onClick={() => handleEdit(staff)}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          size="small"
-                          color="error"
-                          onClick={() => handleDelete(staff._id)}
-                        >
-                          Delete
-                        </Button>
-                      </Box>
-                    }
+              <AnimatePresence>
+                {staffList.map((staff) => (
+                  <motion.div
+                    key={staff._id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
                   >
-                    <ListItemText
-                      primary={staff.username}
-                      secondary={staff.email}
-                    />
-                  </ListItem>
-                  <Divider />
-                </React.Fragment>
-              ))}
+                    <ListItem
+                      secondaryAction={
+                        <Box>
+                          <Button size="small" onClick={() => handleEdit(staff)}>Edit</Button>
+                          <Button size="small" color="error" onClick={() => handleDelete(staff._id)}>Delete</Button>
+                        </Box>
+                      }
+                    >
+                      <ListItemText primary={staff.username} secondary={staff.email} />
+                    </ListItem>
+                    <Divider />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </List>
-          )}
-        </Paper>
+          </Paper>
+        </MotionBox>
+
       </Container>
-    </Box>
+    </MotionBox>
   );
 };
 

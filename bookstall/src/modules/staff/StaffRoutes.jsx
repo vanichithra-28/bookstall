@@ -1,5 +1,5 @@
 import React from "react";
-import Profile from "./pages/Profile";
+
 import UpdateStock from "./pages/UpdateStocks";
 import ViewBooks from "./pages/ViewBooks";
 import Navbar, { drawerWidth } from "../staff/components/Navbar";
@@ -19,7 +19,6 @@ const StaffRoutes = ({ onLogout }) => {
           <Route path="/" element={<Home />} />
 
           {/* Staff pages */}
-          <Route path="profile" element={<Profile />} />
           <Route path="update-stocks" element={<UpdateStock />} />
           <Route path="view-books" element={<ViewBooks />} />
           <Route path="billing" element={<Billing />} />

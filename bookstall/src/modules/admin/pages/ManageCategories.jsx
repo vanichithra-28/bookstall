@@ -11,7 +11,6 @@ import {
   IconButton,
   Box,
   Tooltip,
-  Zoom,
 } from "@mui/material";
 import {
   DeleteOutline,
@@ -21,6 +20,37 @@ import {
   ListAltOutlined,
 } from "@mui/icons-material";
 import axios from "axios";
+import { motion } from "framer-motion";
+
+/* Motion wrappers */
+const MotionBox = motion.create(Box);
+const MotionCard = motion.create(Card);
+const MotionTypography = motion.create(Typography);
+
+/* Floating Books */
+const FloatingBook = ({ delay, x, y, rotation }) => (
+  <MotionBox
+    initial={{ opacity: 0, scale: 0 }}
+    animate={{
+      opacity: [0.1, 0.2, 0.1],
+      scale: 1,
+      y: [0, -15, 0],
+      rotate: [rotation, rotation + 5, rotation],
+    }}
+    transition={{ duration: 4, repeat: Infinity, delay }}
+    sx={{
+      position: "absolute",
+      left: x,
+      top: y,
+      width: 40,
+      height: 50,
+      background: "linear-gradient(135deg, #a0522d, #65350F)",
+      borderRadius: "2px 6px 6px 2px",
+      pointerEvents: "none",
+      zIndex: 0,
+    }}
+  />
+);
 
 function ManageCategories() {
   const [categoryName, setCategoryName] = useState("");
@@ -28,7 +58,6 @@ function ManageCategories() {
   const [showCategories, setShowCategories] = useState(true);
   const [editId, setEditId] = useState(null);
 
-  // Fetch categories function (moved outside useEffect)
   const fetchCategories = async () => {
     try {
       const response = await axios.get("http://localhost:3008/categories");
@@ -40,6 +69,7 @@ function ManageCategories() {
 
   useEffect(() => {
     fetchCategories();
+    
   }, []);
 
   const handleAddCategory = async () => {
@@ -58,10 +88,10 @@ function ManageCategories() {
       }
 
       setCategoryName("");
-      fetchCategories(); // refresh list
+      fetchCategories();
     } catch (error) {
+      console.error("Error saving category:", error);
       alert("Error saving category");
-      console.error(error);
     }
   };
 
@@ -75,7 +105,7 @@ function ManageCategories() {
     if (window.confirm("Are you sure you want to delete this category?")) {
       try {
         await axios.delete(`http://localhost:3008/categories/${id}`);
-        fetchCategories(); // refresh list
+        fetchCategories();
       } catch (error) {
         console.error("Error deleting category:", error);
       }
@@ -83,182 +113,149 @@ function ManageCategories() {
   };
 
   return (
-    <Box
+    <MotionBox
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       sx={{
-        background: "linear-gradient(135deg, #fdf6f0 0%, #fef9f6 100%)",
+        background: "linear-gradient(135deg, #fff4eb 0%, #fff2e6 100%)",
         minHeight: "100vh",
         pb: 6,
+        position: "relative",
+        overflow: "hidden",
       }}
     >
-      <Container maxWidth="md">
-        <Box sx={{ py: 6 }}>
-          <Typography
+      {/* Floating Books */}
+      <FloatingBook delay={0} x="5%" y="15%" rotation={-15} />
+      <FloatingBook delay={0.5} x="92%" y="20%" rotation={10} />
+      <FloatingBook delay={1} x="88%" y="70%" rotation={-10} />
+
+      <Container maxWidth="md" sx={{ position: "relative", zIndex: 1 }}>
+        
+        {/* Header */}
+        <MotionBox
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          sx={{ py: 6 }}
+        >
+          <MotionTypography
             variant="h3"
-            sx={{ fontWeight: 700, color: "#65350F", mb: 1 }} // lavender heading
+            sx={{ fontWeight: 700, color: "#65350F", mb: 1 }}
           >
             Manage Categories
-          </Typography>
-          <Typography sx={{ color: "#5c5c5c", fontSize: "1.1rem" }}>
-            Organize your library collection by genre or department
-          </Typography>
-        </Box>
+          </MotionTypography>
 
-        {/* Add / Update Form */}
-        <Paper
-          elevation={0}
-          sx={{
-            p: 4,
-            borderRadius: 2,
-            backgroundColor: "rgba(255, 255, 255, 0.6)",
-            border: "1px solid #fdf6f0",
-            mb: 6,
-          }}
-        >
-          <Typography
-            variant="h6"
+          <Typography sx={{ color: "#a0522d" }}>
+            Organize your library collection by genre
+          </Typography>
+        </MotionBox>
+
+        {/* Form */}
+        <MotionBox initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          <Paper
             sx={{
-              mb: 3,
-              fontWeight: 600,
-              color: "#a0522d",
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
+              p: 4,
+              mb: 6,
+              borderRadius: 3,
+              background: "rgba(255,255,255,0.9)",
+              backdropFilter: "blur(10px)",
             }}
           >
-            <CategoryOutlined />
-            {editId !== null ? "Update Category Name" : "Create New Category"}
-          </Typography>
+            <Typography
+              variant="h6"
+              sx={{ mb: 3, fontWeight: 600, color: "#a0522d" }}
+            >
+              <CategoryOutlined />{" "}
+              {editId !== null ? "Update Category" : "Add Category"}
+            </Typography>
 
-          <Grid container spacing={2} alignItems="center">
-            <Grid item xs={12} sm={8}>
-              <TextField
-                label="Genre / Category Name"
-                fullWidth
-                variant="outlined"
-                value={categoryName}
-                onChange={(e) => setCategoryName(e.target.value)}
-                sx={{ "& .MuiOutlinedInput-root": { backgroundColor: "#fff" } }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Button
-                variant="contained"
-                fullWidth
-                startIcon={<AddCircleOutline />}
-                sx={{
-                  py: 1.8,
-                  backgroundColor: "#a0522d", // pastel teal
-                  "&:hover": { backgroundColor: "#a0522d" },
-                  fontWeight: 600,
-                }}
-                onClick={handleAddCategory}
-              >
-                {editId !== null ? "Update" : "Add Category"}
-              </Button>
-            </Grid>
-          </Grid>
-        </Paper>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={8}>
+                <TextField
+                  fullWidth
+                  label="Category Name"
+                  value={categoryName}
+                  onChange={(e) => setCategoryName(e.target.value)}
+                />
+              </Grid>
 
-        {/* Category List */}
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            mb: 3,
-          }}
-        >
-          <Typography
-            variant="h5"
-            sx={{
-              fontWeight: 700,
-              color: "#a0522d",
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-            }}
-          >
+              <Grid item xs={12} sm={4}>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  startIcon={<AddCircleOutline />}
+                  onClick={handleAddCategory}
+                  sx={{
+                    bgcolor: "#a0522d",
+                    "&:hover": { bgcolor: "#65350F" },
+                    height: "56px",
+                  }}
+                >
+                  {editId !== null ? "Update" : "Add"}
+                </Button>
+              </Grid>
+            </Grid>
+          </Paper>
+        </MotionBox>
+
+        {/* List Header */}
+        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
+          <Typography variant="h5" sx={{ color: "#65350F", fontWeight: 700 }}>
             <ListAltOutlined /> Category List
           </Typography>
-          <Button
-            size="small"
-            onClick={() => setShowCategories(!showCategories)}
-            sx={{ color: "#a0522d", fontWeight: 600 }}
-          >
-            {showCategories ? "Hide List" : "Show List"}
+
+          <Button onClick={() => setShowCategories(!showCategories)}>
+            {showCategories ? "Hide" : "Show"}
           </Button>
         </Box>
 
+        {/* Category Cards */}
         {showCategories && (
           <Grid container spacing={2}>
             {categories.map((cat, index) => (
-              <Grid item xs={12} sm={6} key={cat._id || index}>
-                <Zoom in={true} style={{ transitionDelay: `${index * 50}ms` }}>
-                  <Card
+              <Grid item xs={12} sm={6} key={cat._id}>
+                <MotionCard
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  whileHover={{ y: -5, scale: 1.02 }}
+                  sx={{
+                    borderRadius: 3,
+                    background: "rgba(255,255,255,0.9)",
+                  }}
+                >
+                  <CardContent
                     sx={{
-                      borderRadius: 2,
-                      border: "1px solid rgba(205, 180, 219, 0.3)", // lavender border
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
                     }}
                   >
-                    <CardContent
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        p: "16px !important",
-                      }}
-                    >
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                        <Box
-                          sx={{
-                            width: 40,
-                            height: 40,
-                            borderRadius: "50%",
-                            backgroundColor: "#f8d7da", // blush pink
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            color: "#4a3f35",
-                            fontWeight: 800,
-                          }}
-                        >
-                          {index + 1}
-                        </Box>
-                        <Typography
-                          variant="h6"
-                          sx={{ fontWeight: 600, color: "#4a3f35" }}
-                        >
-                          {cat.name}
-                        </Typography>
-                      </Box>
+                    <Typography sx={{ fontWeight: 600 }}>
+                      {cat.name}
+                    </Typography>
 
-                      <Box>
-                        <Tooltip title="Edit Category">
-                          <IconButton
-                            onClick={() => handleEdit(cat)}
-                            sx={{ color: "#a0522d" }}
-                          >
-                            <EditOutlined fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Delete Category">
-                          <IconButton
-                            onClick={() => handleDelete(cat._id)}
-                            sx={{ color: "#d32f2f" }}
-                          >
-                            <DeleteOutline fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </Zoom>
+                    <Box>
+                      <Tooltip title="Edit">
+                        <IconButton onClick={() => handleEdit(cat)}>
+                          <EditOutlined />
+                        </IconButton>
+                      </Tooltip>
+
+                      <Tooltip title="Delete">
+                        <IconButton onClick={() => handleDelete(cat._id)}>
+                          <DeleteOutline />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                  </CardContent>
+                </MotionCard>
               </Grid>
             ))}
           </Grid>
         )}
+
       </Container>
-    </Box>
+    </MotionBox>
   );
 }
 

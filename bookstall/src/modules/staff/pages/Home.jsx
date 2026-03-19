@@ -13,7 +13,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Search02Icon } from "@hugeicons/core-free-icons";
 
 
-const Home = ({ featuredBooks = [], onView }) => {
+const Home = () => {
   return (
     <div
       style={{
@@ -44,11 +44,10 @@ const Home = ({ featuredBooks = [], onView }) => {
               sx={{ fontWeight: 700, color: "#65350F", mb: 2 }}
               gutterBottom
             >
-              Find your next favorite book
+              Staff Dashboard
             </Typography>
             <Typography sx={{ color: "#a0522d", mb: 3, fontSize: "1.1rem" }}>
-              Curated picks, new releases and timeless classics — discover
-              stories that stay with you.
+              Welcome back
             </Typography>
             <Box></Box>
           </Box>
@@ -63,39 +62,7 @@ const Home = ({ featuredBooks = [], onView }) => {
         </Container>
       </Box>
 
-      <Container sx={{ py: 6 }}>
-        <Typography
-          variant="h4"
-          sx={{ fontWeight: 600, color: "#65350F", mb: 3 }}
-          gutterBottom
-        >
-          Featured Books
-        </Typography>
-
-        {featuredBooks.length === 0 ? (
-          <Box
-            sx={{
-              p: 6,
-              textAlign: "center",
-              bgcolor: "background.paper",
-              borderRadius: 1,
-            }}
-          >
-            <Typography>
-              No featured books yet. Add books from your database to populate
-              this section.
-            </Typography>
-          </Box>
-        ) : (
-          <Grid container spacing={3}>
-            {featuredBooks.map((b) => (
-              <Grid item key={b.id} xs={12} sm={6} md={4} lg={3}>
-                <BookCard book={b} onView={onView} />
-              </Grid>
-            ))}
-          </Grid>
-        )}
-      </Container>
+     
     </div>
   );
 };

@@ -12,11 +12,40 @@ import {
   Button,
 } from "@mui/material";
 import axios from "axios";
+import { motion } from "framer-motion";
+
+/* Motion wrappers */
+const MotionBox = motion.create(Box);
+const MotionTypography = motion.create(Typography);
+
+/* Floating Books */
+const FloatingBook = ({ delay, x, y, rotation }) => (
+  <MotionBox
+    initial={{ opacity: 0, scale: 0 }}
+    animate={{
+      opacity: [0.1, 0.2, 0.1],
+      scale: 1,
+      y: [0, -15, 0],
+      rotate: [rotation, rotation + 5, rotation],
+    }}
+    transition={{ duration: 4, repeat: Infinity, delay }}
+    sx={{
+      position: "absolute",
+      left: x,
+      top: y,
+      width: 40,
+      height: 50,
+      background: "linear-gradient(135deg, #a0522d, #65350F)",
+      borderRadius: "2px 6px 6px 2px",
+      pointerEvents: "none",
+      zIndex: 0,
+    }}
+  />
+);
 
 function ManageCustomers() {
   const [customers, setCustomers] = useState([]);
 
-  // Fetch customers with role = "customer"
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
@@ -29,7 +58,6 @@ function ManageCustomers() {
     fetchCustomers();
   }, []);
 
-  // Handle status update
   const handleStatus = async (id, newStatus) => {
     try {
       const res = await axios.put(
@@ -44,32 +72,57 @@ function ManageCustomers() {
   };
 
   return (
-    <div
-      style={{
-        background: "linear-gradient(135deg, #fdf6f0 0%, #fef9f6 100%)", // pastel cream gradient
+    <MotionBox
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      sx={{
+        background: "linear-gradient(135deg, #fff4eb 0%, #fff2e6 100%)",
         minHeight: "100vh",
-        paddingTop: "40px",
+        py: 6,
+        position: "relative",
+        overflow: "hidden",
       }}
     >
-      <Container>
-        <Box sx={{ mb: 6 }}>
-          <Typography
-            variant="h4"
-            gutterBottom
-            sx={{ fontWeight: "bold", color: "#65350F" }} // lavender heading
-          >
-          Customers
-          </Typography>
+      {/* Floating Books */}
+      <FloatingBook delay={0} x="5%" y="15%" rotation={-15} />
+      <FloatingBook delay={0.5} x="92%" y="20%" rotation={10} />
+      <FloatingBook delay={1} x="88%" y="70%" rotation={-10} />
 
-          <Paper sx={{ marginTop: 4, borderRadius: 3, boxShadow: "0 6px 18px rgba(0,0,0,0.08)" }}>
+      <Container sx={{ position: "relative", zIndex: 1 }}>
+
+        {/* Title */}
+        <MotionTypography
+          variant="h3"
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          sx={{ fontWeight: "bold", color: "#65350F", mb: 4 }}
+        >
+          Customers
+        </MotionTypography>
+
+        {/* Table */}
+        <MotionBox
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <Paper
+            sx={{
+              borderRadius: 3,
+              background: "rgba(255,255,255,0.9)",
+              backdropFilter: "blur(10px)",
+              overflow: "hidden",
+              boxShadow: "0 6px 18px rgba(101,53,15,0.08)",
+            }}
+          >
             <Table>
-              <TableHead>
+
+              <TableHead sx={{ backgroundColor: "#a0522d" }}>
                 <TableRow>
-                  <TableCell><b>Name</b></TableCell>
-                  <TableCell><b>Email</b></TableCell>
-                  <TableCell><b>Phone</b></TableCell>
-                  <TableCell><b>Status</b></TableCell>
-                  <TableCell><b>Action</b></TableCell>
+                  <TableCell sx={{ color: "#fff" }}><b>Name</b></TableCell>
+                  <TableCell sx={{ color: "#fff" }}><b>Email</b></TableCell>
+                  <TableCell sx={{ color: "#fff" }}><b>Phone</b></TableCell>
+                  <TableCell sx={{ color: "#fff" }}><b>Status</b></TableCell>
+                  <TableCell sx={{ color: "#fff" }}><b>Action</b></TableCell>
                 </TableRow>
               </TableHead>
 
@@ -81,12 +134,31 @@ function ManageCustomers() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  customers.map((customer) => (
-                    <TableRow key={customer._id} hover>
+                  customers.map((customer, index) => (
+                    <motion.tr
+                      key={customer._id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                    >
                       <TableCell>{customer.username}</TableCell>
                       <TableCell>{customer.email}</TableCell>
                       <TableCell>{customer.phonenumber}</TableCell>
-                      <TableCell>{customer.status}</TableCell>
+
+                      <TableCell
+                        sx={{
+                          fontWeight: 600,
+                          color:
+                            customer.status === "accepted"
+                              ? "green"
+                              : customer.status === "rejected"
+                              ? "red"
+                              : "#a0522d",
+                        }}
+                      >
+                        {customer.status}
+                      </TableCell>
+
                       <TableCell>
                         {customer.status === "pending" ? (
                           <>
@@ -94,18 +166,19 @@ function ManageCustomers() {
                               variant="contained"
                               sx={{
                                 mr: 1,
-                                bgcolor: "#a3d2ca", // pastel teal
-                                "&:hover": { bgcolor: "#5eaaa8" },
+                                bgcolor: "#a0522d",
+                                "&:hover": { bgcolor: "#65350F" },
                               }}
                               onClick={() => handleStatus(customer._id, "accepted")}
                             >
                               Accept
                             </Button>
+
                             <Button
                               variant="contained"
                               sx={{
-                                bgcolor: "#ffc8dd", // pastel blush
-                                "&:hover": { bgcolor: "#ffafcc" },
+                                bgcolor: "#d9534f",
+                                "&:hover": { bgcolor: "#c9302c" },
                               }}
                               onClick={() => handleStatus(customer._id, "rejected")}
                             >
@@ -113,20 +186,22 @@ function ManageCustomers() {
                             </Button>
                           </>
                         ) : (
-                          <Typography>
+                          <Typography sx={{ fontWeight: 500 }}>
                             {customer.status.charAt(0).toUpperCase() + customer.status.slice(1)}
                           </Typography>
                         )}
                       </TableCell>
-                    </TableRow>
+                    </motion.tr>
                   ))
                 )}
               </TableBody>
+
             </Table>
           </Paper>
-        </Box>
+        </MotionBox>
+
       </Container>
-    </div>
+    </MotionBox>
   );
 }
 

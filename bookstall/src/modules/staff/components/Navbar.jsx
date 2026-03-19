@@ -28,7 +28,7 @@ const Navbar = ({ onLogout }) => {
   const location = useLocation();
 const menuItems = [
   { text: "Home", to: "/staff", icon: Home05Icon },
-  { text: "Profile", to: "/staff/profile", icon: User02FreeIcons },
+  
   { text: "Update Stocks", to: "/staff/update-stocks", icon: Bookshelf03Icon },
   { text: "View Books", to: "/staff/view-books", icon: LibraryIcon },
   { text: "Billing", to: "/staff/billing", icon: Invoice01Icon },

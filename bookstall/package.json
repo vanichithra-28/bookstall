@@ -20,6 +20,7 @@
     "framer-motion": "^12.36.0",
     "material": "^1.0.3",
     "react": "^19.2.0",
+    "react-countup": "^6.5.3",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.13.1",
     "ui": "^0.2.4"

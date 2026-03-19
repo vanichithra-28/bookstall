@@ -169,4 +169,39 @@ router.get("/customer", async (req, res) => {
   }
 });
 
+// Get profile (example: using first logged-in user for now)
+router.get("/profile", async (req, res) => {
+  try {
+    const user = await Customer.findOne(); // later use logged-in user id
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching profile" });
+  }
+});
+
+// Update profile
+router.put("/profile", async (req, res) => {
+  try {
+    const { username, email, phonenumber, address } = req.body;
+
+    const user = await Customer.findOne();
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.username = username;
+    user.email = email;
+    user.phonenumber = phonenumber;
+    user.address = address;
+
+    await user.save();
+
+    res.json({ message: "Profile updated successfully", user });
+  } catch (err) {
+    res.status(500).json({ message: "Error updating profile" });
+  }
+});
+
+
 module.exports = router;
